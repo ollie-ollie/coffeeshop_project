@@ -69,11 +69,13 @@ def get_drinks_detail(payload):
 def create_drink(payload):
     body = request.get_json()
     validate_body(body)
-
+    print(body)
     try:
         drink_title = body['title']
-        drink_recipe = json.dumps(body['recipe'])
+        drink_recipe = body['recipe'] if type(body['recipe']) == str \
+            else json.dumps(body['recipe'])
         drink = Drink(title=drink_title, recipe=drink_recipe)
+        print(drink)
         drink.insert()
 
         return jsonify({
@@ -100,7 +102,8 @@ def modify_drink(payload, drink_id):
             drink.title = body['title']
 
         if 'recipe' in body:
-            drink.recipe = body['recipe']
+            drink.recipe = body['recipe'] if type(body['recipe']) == str \
+                else json.dumps(body['recipe'])
 
         drink.update()
 
